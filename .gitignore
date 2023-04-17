@@ -1,0 +1,6 @@
+*.wps
+*.elf
+*.rpx
+build/
+src/resources/filelist.h
+.vscode/

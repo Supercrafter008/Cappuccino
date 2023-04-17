@@ -1,0 +1,85 @@
+; $MODE = "UniformRegister"
+
+; $NUM_SPI_PS_INPUT_CNTL = 1
+
+; texInput R0
+; $SPI_PS_INPUT_CNTL[0].SEMANTIC = 0
+; $SPI_PS_INPUT_CNTL[0].DEFAULT_VAL = 1
+
+; C0
+; $UNIFORM_VARS[0].name = "uColor"
+; $UNIFORM_VARS[0].type = "vec4"
+; $UNIFORM_VARS[0].count = 1
+; $UNIFORM_VARS[0].block = -1
+; $UNIFORM_VARS[0].offset = 0
+
+; C1
+; $UNIFORM_VARS[1].name = "uOutlineColor"
+; $UNIFORM_VARS[1].type = "vec4"
+; $UNIFORM_VARS[1].count = 1
+; $UNIFORM_VARS[1].block = -1
+; $UNIFORM_VARS[1].offset = 4
+
+; C2
+; $UNIFORM_VARS[2].name = "uData"
+; $UNIFORM_VARS[2].type = "vec4"
+; $UNIFORM_VARS[2].count = 1
+; $UNIFORM_VARS[2].block = -1
+; $UNIFORM_VARS[2].offset = 8
+
+00 ALU: ADDR(32) CNT(60) 
+      0  x: MULADD      R127.x,  C2.y,  0.5, -C2.w      
+         y: MULADD      R127.y,  C2.x,  0.5, -C2.w      
+         z: MULADD      R123.z, -C2.y,  0.5,  R0.y      
+         w: MULADD      R123.w, -C2.x,  0.5,  R0.x      
+         t: MOV         R127.z,  0.0f      
+      1  x: MAX_DX10    ____,  PV0.z, -PV0.z      
+         y: MAX_DX10    ____,  PV0.w, -PV0.w      
+         z: SETGT_DX10  R126.z,  C2.w,  0.0f      
+      2  z: ADD         ____, -R127.x,  PV1.x      
+         w: ADD         ____, -R127.y,  PV1.y      
+      3  x: ADD         ____,  PV2.z,  C2.z      
+         y: ADD         ____,  PV2.w,  C2.z      
+      4  z: ADD         ____,  PV3.x,  C2.w      
+         w: ADD         ____,  PV3.y,  C2.w      
+      5  y: ADD         ____,  PV4.w,  (0x3D23D70A, 0.03999999911f).x      
+         w: ADD         ____,  PV4.z,  (0x3D23D70A, 0.03999999911f).x      
+      6  x: MAX         ____,  PV5.y,  0.0f      
+         y: MAX         ____,  PV5.w,  0.0f      
+         z: MAX         ____,  PV5.y,  PV5.w      
+      7  x: DOT4        ____,  PV6.x,  PV6.x      
+         y: DOT4        ____,  PV6.y,  PV6.y      
+         z: DOT4        ____,  R127.z,  R127.z      
+         w: DOT4        ____,  (0x80000000, -0.0f).x,  0.0f      
+         t: MIN         R127.y,  PV6.z,  0.0f      
+      8  t: SQRT_e      ____,  PV7.x      
+      9  x: ADD         ____,  PS8,  R127.y      
+     10  w: ADD         ____,  PV9.x, -C2.z      
+     11  z: ADD         R127.z,  PV10.w,  C2.w      
+     12  x: SETGT_DX10  R127.x,  0.0f,  PV11.z      
+         w: MAX_DX10    ____,  PV11.z, -PV11.z      
+     13  x: CNDE_INT    R123.x,  PV12.x,  0.0f,  C0.y      
+         z: ADD         ____,  PV12.w, -C2.w      
+         w: CNDE_INT    R123.w,  PV12.x,  0.0f,  C0.x      
+     14  x: CNDE_INT    R123.x,  R127.x,  0.0f,  C0.z      
+         y: CNDE_INT    R123.y,  R126.z,  R127.z,  PV13.z      VEC_021 
+         z: CNDE_INT    R123.z,  R127.x,  0.0f,  C0.w      
+         w: CNDE_INT    R123.w,  R126.z,  0.0f,  PV13.w      
+         t: CNDE_INT    R122.x,  R126.z,  0.0f,  PV13.x      VEC_021 
+     15  x: ADD         ____,  PV14.y,  (0x3C75C28F, 0.01499999966f).x      
+         y: CNDE_INT    R123.y,  R126.z,  0.0f,  PV14.z      
+         z: CNDE_INT    R123.z,  R126.z,  0.0f,  PV14.x      
+         w: ADD         R127.w,  PV14.w, -C1.x      
+         t: ADD         R126.z,  PS14, -C1.y      
+     16  x: ADD         R127.x,  PV15.y, -C1.w      
+         y: ADD         R127.y,  PV15.z, -C1.z      
+         w: MUL_e       ____,  PV15.x,  (0x42055556, 33.33333588f).x      CLAMP 
+     17  y: MULADD      R123.y,  (0xC0000000, -2.0f).y,  PV16.w,  (0x40400000, 3.0f).x      
+         z: MUL         ____,  PV16.w,  PV16.w      
+     18  x: MUL         ____,  PV17.z,  PV17.y      
+     19  x: MULADD      R0.x,  R127.w,  PV18.x,  C1.x      
+         y: MULADD      R0.y,  R126.z,  PV18.x,  C1.y      
+         z: MULADD      R0.z,  R127.y,  PV18.x,  C1.z      
+         w: MULADD      R0.w,  R127.x,  PV18.x,  C1.w      
+01 EXP_DONE: PIX0, R0
+END_OF_PROGRAM
