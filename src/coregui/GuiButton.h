@@ -30,6 +30,6 @@ public:
 
 private:
 
-    GuiText* m_Text;
-    GuiRect* m_Rect;
+    GuiText* m_Text = nullptr;
+    GuiRect* m_Rect = nullptr;
 };

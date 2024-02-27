@@ -20,6 +20,7 @@ GuiButton::GuiButton(std::wstring text) : GuiElement(){
 
 GuiButton::~GuiButton(){
     if(m_Text) delete m_Text;
+    if(m_Rect) delete m_Rect;
 }
 
 bool GuiButton::Pressed(){

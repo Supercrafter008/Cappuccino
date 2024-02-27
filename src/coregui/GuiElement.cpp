@@ -9,6 +9,14 @@ GuiElement::GuiElement(){
 
 }
 
+void GuiElement::Active(bool ac){
+    m_IsActive = ac;
+}
+
+
+bool GuiElement::IsActive(){
+    return m_IsActive;
+}
 
 void GuiElement::SetPos(glm::vec3 pos){
     if(m_Parent != nullptr){

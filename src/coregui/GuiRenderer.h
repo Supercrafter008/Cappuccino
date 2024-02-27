@@ -18,8 +18,8 @@ class GuiRenderer{
 
         void Begin(Buffer* posBuffer, Buffer* texPosBuffer);
         void BeginRect();
-        void SetOffset(const glm::vec3 &vec, bool isDrc);
-        void SetScale(const glm::vec2 &vec, bool isDrc);
+        void SetOffset(const glm::vec3 &vec);
+        void SetScale(const glm::vec2 &vec);
         void SetColor(const glm::vec4 &vec);
         void SetOutlineColor(const glm::vec4 &vec);
         void SetColorData(glm::vec2 size, float radius, float thickness);

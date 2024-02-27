@@ -11,7 +11,7 @@ GuiImage::GuiImage(Texture* texture) : GuiElement(){
 }
 
 GuiImage::~GuiImage(){
-    if(m_Texture) delete m_Texture;
+
 }
 
 void GuiImage::SetTexture(Texture* texture){
@@ -22,11 +22,11 @@ void GuiImage::SetTexture(Texture* texture){
         texture = invalidTexture;
     }
     m_Texture = texture;
-    SetScale({1,1});
+    SetScale(texture->GetTextureSize());
 }
 
 void GuiImage::SetScale(glm::vec2 scale){
-    m_Scale = (glm::vec2)m_Texture->GetTextureSize() * scale;
+    m_Scale = scale;
 }
 
 void GuiImage::Draw(bool isDrc){
@@ -35,8 +35,8 @@ void GuiImage::Draw(bool isDrc){
     renderer->BindShader(SHADER_TEXTURE);
     renderer->BindBuffers();
     
-    renderer->SetOffset(m_Pos, isDrc);
-    renderer->SetScale(m_Scale, isDrc);
+    renderer->SetOffset(m_Pos);
+    renderer->SetScale(m_Scale);
     renderer->SetColor(m_Color);
 
     m_Texture->Bind();

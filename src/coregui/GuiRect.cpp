@@ -15,10 +15,10 @@ GuiRect::GuiRect(glm::vec4 fillColor, glm::vec4 outlineColor) : GuiElement(){
     m_TexCoordsBuffer = new Buffer(4, GX2_ATTRIB_FORMAT_FLOAT_32_32);
 
     float defaultPos[] = {
-        1.0f, 1.0f, 
-        1.0f, 0.0f,
+        2.0f, 2.0f, 
+        2.0f, 0.0f,
         0.0f, 0.0f,
-        0.0f, 1.0f,
+        0.0f, 2.0f,
     };
 
     float defaultTexCoords[] = {
@@ -82,8 +82,8 @@ void GuiRect::Draw(bool isDrc){
     renderer->BindShader(SHADER_COLOR);
     renderer->BindBuffers();
     
-    renderer->SetOffset(m_Pos, isDrc);
-    renderer->SetScale(m_Scale, isDrc);
+    renderer->SetOffset(m_Pos);
+    renderer->SetScale(m_Scale);
     renderer->SetColor(m_FillColor);
     renderer->SetOutlineColor(m_OutlineColor);
     renderer->SetColorData(m_DataScale, m_Radius, m_Thickness);

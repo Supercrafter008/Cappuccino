@@ -3,14 +3,10 @@
 #include "resources/Resources.h"
 #include <coreinit/memory.h>
 #include <string.h>
-#include <bit>
 
-#define QUALTITY 104
+#define FONT_SIZE 72
 
 static FT_Library s_Ft;
-
-
-
 
 Font::Font(std::wstring chars){
     void* data;
@@ -36,7 +32,7 @@ void Font::GenTextureAtlas(uint8_t* data, uint32_t size, std::wstring chars){
     FT_Face face;
 
 	FT_New_Memory_Face(s_Ft, (FT_Byte*)data, size, 0, &face);
-    FT_Set_Pixel_Sizes(face, 0, QUALTITY - 8);
+    FT_Set_Pixel_Sizes(face, 0, FONT_SIZE);
     FT_Select_Charmap(face, FT_ENCODING_UNICODE);
 
 	uint16_t textureSize = CalculateTextureAtlasSize(chars);
@@ -51,13 +47,18 @@ void Font::GenTextureAtlas(uint8_t* data, uint32_t size, std::wstring chars){
 
 	uint16_t pen_x = 0, pen_y = 0;
     uint16_t i = 0;
+    uint16_t rowHeight = 0;
     for(wchar_t charcode : chars){
         FT_Load_Char(face, charcode, FT_LOAD_DEFAULT);
         FT_Render_Glyph(face->glyph, FT_RENDER_MODE_SDF);
         FT_Bitmap* bmp = &face->glyph->bitmap;
+        if(bmp->rows > rowHeight){
+            rowHeight = bmp->rows;
+        }
+
 		if(pen_x + bmp->width >= textureSize){
 			pen_x = 0;
-			pen_y += QUALTITY;
+			pen_y += rowHeight;
 		}
 
 		for(uint16_t row = 0; row < bmp->rows; ++row){
@@ -84,28 +85,29 @@ void Font::GenTextureAtlas(uint8_t* data, uint32_t size, std::wstring chars){
 }
 
 void Font::GetTextDrawInfo(std::wstring text, Buffer* posBuffer, Buffer* texCoordsBuffer){
+
     float* vertexPositions = new float[text.size() * 8];
     float* texturePositions = new float[text.size() * 8];
     int i = 0;
     float xPos = 0, yPos = 0;
     for(wchar_t charcode : text){
-        float x = xPos + m_GlyphInfos[m_CharcodeMap[charcode]].offset.x;
-        float y = yPos + (QUALTITY - 8 - m_GlyphInfos[m_CharcodeMap[charcode]].offset.y);
+        float x = xPos + (m_GlyphInfos[m_CharcodeMap[charcode]].offset.x) * 2;
+        float y = yPos + (FONT_SIZE - m_GlyphInfos[m_CharcodeMap[charcode]].offset.y) * 2;
         //veretx
-        vertexPositions[i] = x + m_GlyphInfos[m_CharcodeMap[charcode]].size.x;
-        vertexPositions[i + 1] = y + m_GlyphInfos[m_CharcodeMap[charcode]].size.y;
+        vertexPositions[i] = x + (m_GlyphInfos[m_CharcodeMap[charcode]].size.x * 2);
+        vertexPositions[i + 1] = y + (m_GlyphInfos[m_CharcodeMap[charcode]].size.y * 2);
 
-        vertexPositions[i + 2] = x + m_GlyphInfos[m_CharcodeMap[charcode]].size.x;
+        vertexPositions[i + 2] = x + (m_GlyphInfos[m_CharcodeMap[charcode]].size.x * 2);
         vertexPositions[i + 3] = y;
 
         vertexPositions[i + 4] = x;
         vertexPositions[i + 5] = y;
 
         vertexPositions[i + 6] = x;
-        vertexPositions[i + 7] = y + m_GlyphInfos[m_CharcodeMap[charcode]].size.y;
+        vertexPositions[i + 7] = y + (m_GlyphInfos[m_CharcodeMap[charcode]].size.y * 2);
         
 
-        xPos += m_GlyphInfos[m_CharcodeMap[charcode]].advance;
+        xPos += (m_GlyphInfos[m_CharcodeMap[charcode]].advance * 2);
 
         //texture
         texturePositions[i] = (m_GlyphInfos[m_CharcodeMap[charcode]].texPos.x + m_GlyphInfos[m_CharcodeMap[charcode]].size.x) / m_FontAtlas->GetTextureSize().x;
@@ -133,18 +135,26 @@ void Font::GetTextDrawInfo(std::wstring text, Buffer* posBuffer, Buffer* texCoor
 
 glm::vec2 Font::GetTextSize(std::wstring text, float fontSize){
     glm::vec2 size(0);
+    int i = 0;
+    wchar_t lastCode;
     for(wchar_t charcode : text){
-        size.x += m_GlyphInfos[m_CharcodeMap[charcode]].advance + m_GlyphInfos[m_CharcodeMap[charcode]].offset.x;
-        if(size.y < m_GlyphInfos[m_CharcodeMap[charcode]].size.y - m_GlyphInfos[m_CharcodeMap[charcode]].offset.x){
-            size.y = m_GlyphInfos[m_CharcodeMap[charcode]].size.y - m_GlyphInfos[m_CharcodeMap[charcode]].offset.x;
+        if(i == 0){
+            size.x += m_GlyphInfos[m_CharcodeMap[charcode]].offset.x;
         }
+        if(size.y < (FONT_SIZE - m_GlyphInfos[m_CharcodeMap[charcode]].offset.y) + m_GlyphInfos[m_CharcodeMap[charcode]].size.y){
+            size.y = (FONT_SIZE - m_GlyphInfos[m_CharcodeMap[charcode]].offset.y) + m_GlyphInfos[m_CharcodeMap[charcode]].size.y;
+        }
+        size.x += m_GlyphInfos[m_CharcodeMap[charcode]].advance;
+        lastCode = charcode;
     }
+    size.x += m_GlyphInfos[m_CharcodeMap[lastCode]].offset.x + m_GlyphInfos[m_CharcodeMap[lastCode]].size.x;
+
     return fontSize * size;
 }
 
 uint16_t Font::CalculateTextureAtlasSize(std::wstring chars){
     //aprox
-    return (uint16_t)ceil(sqrt(chars.length()) * ((double)QUALTITY));
+    return (uint16_t)ceil(sqrt(chars.length()) * ((double)FONT_SIZE + 6));
 }
 
 void Font::Bind(){

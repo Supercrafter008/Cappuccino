@@ -8,7 +8,9 @@
 class GuiFrame : public GuiElement{
     public:
         GuiFrame();
+        ~GuiFrame();
 
+        void Update();
         void Draw(bool isDrc);
 
         void AddElement(GuiElement* element);

@@ -26,6 +26,7 @@ public:
     void GetTextDrawInfo(std::wstring text, Buffer* posBuffer, Buffer* texCoordsBuffer);
 
     void Bind();
+
     glm::ivec2 GetTextureSize() { return m_FontAtlas->GetTextureSize(); };
 
     glm::vec2 GetTextSize(std::wstring text, float fontSize);

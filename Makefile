@@ -19,7 +19,7 @@ include $(DEVKITPRO)/wut/share/wut_rules
 #-------------------------------------------------------------------------------
 TARGET		:=	men
 BUILD		:=	build
-SOURCES		:=	src src/gfx src/resources src/gui src/screens src/utils src/input
+SOURCES		:=	src src/gfx src/resources src/gui src/coregui src/screen src/utils src/input
 DATA		:=	data data/shaders data/images
 INCLUDES	:=	include
 

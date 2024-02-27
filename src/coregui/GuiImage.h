@@ -14,14 +14,13 @@ public:
     GuiImage(Texture* texture);
     ~GuiImage();
 
-    void SetScale(glm::vec2 scale) override;
+    void SetScale(glm::vec2 scale) override;    
 
     void SetTexture(Texture* texture);
+    Texture* GetTexture() { return m_Texture; };
 
     void Draw(bool isDrc) override;
 
 private:
-    glm::vec2 m_TextScale;
-
-    Texture* m_Texture;
+    Texture* m_Texture = nullptr;
 };

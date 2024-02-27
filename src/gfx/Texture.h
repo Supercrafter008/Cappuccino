@@ -5,6 +5,7 @@
 #include <glm/glm.hpp>
 #include <gx2/texture.h>
 #include <gx2/sampler.h>
+#include <string>
 
 
 struct TextureConfig{
@@ -21,7 +22,7 @@ public:
     Texture(TextureConfig config);
     ~Texture();
 
-    static Texture* LoadFromFile(const char* filename);
+    static Texture* LoadFromFile(std::string filename);
     static Texture* LoadFromMemory(uint8_t* data, TextureConfig config);
     
     void SetPixel(glm::ivec2 loc, uint32_t pixel);

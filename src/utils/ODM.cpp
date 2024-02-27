@@ -1,14 +1,19 @@
 #include "odm.h"
 
 #include <coreinit/ios.h>
-#include <whb/log.h>
-#include <whb/log_udp.h>
+
 
 IOSHandle ODM::odmHandle = 0;
 
 void ODM::Open(){
     odmHandle = IOS_Open("/dev/odm", (IOSOpenMode)0);
 }
+
+void ODM::StopMotor(){
+    uint32_t out = 2;
+    IOS_Ioctl(odmHandle, 0x05, &out, sizeof(uint32_t), &out, sizeof(uint32_t));
+}
+
 
 DiscStatus ODM::GetDiscStatus(){
     uint32_t out = 0;

@@ -25,8 +25,8 @@
          y: MOV         R0.y,  C0.y      
          z: MOV         R0.z,  C0.z      
          t: MOV         R0.x,  C0.x      
-      2  w: ADD         ____,  PV1.x,  -0.15f     
-      3  z: MUL       ____,  PV2.w,  2.5f      CLAMP 
+      2  w: ADD         ____,  PV1.x,  -0.4375f     
+      3  z: MUL       ____,  PV2.w,  8.0f      CLAMP 
       4  x: MULADD      R127.x,  -2.0f,  PV3.z,  3.0f      
          y: MUL         ____,  PV3.z,  PV3.z      
       5  w: MULADD      R0.w, -PV4.y,  PV4.x,  1.0f      

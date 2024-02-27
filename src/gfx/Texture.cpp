@@ -7,7 +7,7 @@
 #include <malloc.h>
 #include <coreinit/memdefaultheap.h>
 #include <gd.h>
-
+#include <string>
 
 #include "resources/Resources.h"
 
@@ -64,16 +64,18 @@ Texture::~Texture(){
             free(m_Texture->surface.image);
         }
         delete m_Texture;
+        m_Texture = nullptr;
     }
     if(m_Sampler != nullptr){
         delete m_Sampler;
+        m_Sampler = nullptr;
     }
 }
 
-Texture* Texture::LoadFromFile(const char* path){
-    const uint8_t* file = Resources::GetFile(path);
+Texture* Texture::LoadFromFile(std::string path){
+    const uint8_t* file = Resources::GetFile(path.c_str());
     if(file == nullptr) return nullptr;
-    uint32_t filesize = Resources::GetFileSize(path);
+    uint32_t filesize = Resources::GetFileSize(path.c_str());
     gdImagePtr img;
 
     if (file[0] == 'B' && file[1] == 'M') {
@@ -162,4 +164,3 @@ void Texture::Bind(){
         GX2SetPixelSampler(m_Sampler, 0);
     }
 }
-

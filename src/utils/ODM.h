@@ -11,7 +11,8 @@ enum DiscStatus{
 
 class ODM{
     public:
-    static void Open();  
+    static void Open();
+    static void StopMotor();
     static DiscStatus GetDiscStatus();  
     static void Close();
     private:

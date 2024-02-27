@@ -42,9 +42,6 @@ GuiRenderer::GuiRenderer(){
     m_TVWidthScale = 1.0f / (float)WHBGfxGetTVColourBuffer()->surface.width;
     m_TVHeightScale = 1.0f / (float)WHBGfxGetTVColourBuffer()->surface.height;
 
-    m_DRCWidthScale = 1.0f / (float)WHBGfxGetDRCColourBuffer()->surface.width;
-    m_DRCHeightScale = 1.0f / (float)WHBGfxGetDRCColourBuffer()->surface.height;
-
 }
 
 GuiRenderer::~GuiRenderer(){
@@ -66,10 +63,10 @@ void GuiRenderer::BeginRect(){
     customBuffers = false;
     
     float defaultPos[] = {
-        1.0f, 1.0f, 
-        1.0f, 0.0f,
+        2.0f, 2.0f, 
+        2.0f, 0.0f,
         0.0f, 0.0f,
-        0.0f, 1.0f,
+        0.0f, 2.0f,
     };
 
     float defaultTexCoords[] = {
@@ -85,24 +82,18 @@ void GuiRenderer::BeginRect(){
 
 
 
-void GuiRenderer::SetOffset(const glm::vec3 &offset, bool isDrc){
+void GuiRenderer::SetOffset(const glm::vec3 &offset){
     glm::vec3 vec;
-    vec.x = ((offset.x * m_TVWidthScale) * 2) - 1;
-    vec.y = ((offset.y * m_TVHeightScale) * -2) + 1;
-
+    vec.x = (((offset.x + 1) * m_TVWidthScale) * 2) - 1;
+    vec.y = (((offset.y + 1) * m_TVHeightScale) * -2) + 1;
     vec.z = offset.z;
     m_CurrentShader->SetVertexUniform("uOffset", 4, glm::value_ptr(vec));
 }
 
-void GuiRenderer::SetScale(const glm::vec2 &scale, bool isDrc){
+void GuiRenderer::SetScale(const glm::vec2 &scale){
     glm::vec2 vec;
-    if(isDrc){
-        vec.x = scale.x * m_DRCWidthScale;
-        vec.y = scale.y * m_DRCHeightScale * -1;
-    }else{
-        vec.x = scale.x * m_TVWidthScale;
-        vec.y = scale.y * m_TVHeightScale * -1;
-    }
+    vec.x = scale.x * m_TVWidthScale;
+    vec.y = scale.y * m_TVHeightScale * -1;
     m_CurrentShader->SetVertexUniform("uScale", 4, glm::value_ptr(vec));
 }
 

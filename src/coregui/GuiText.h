@@ -10,10 +10,13 @@ class GuiText : public GuiElement{
 public:
     GuiText(std::wstring text);
     GuiText(std::wstring text, Font* Font);
+    GuiText(std::string text);
+    GuiText(std::string text, Font* Font);
     ~GuiText();
 
     void SetFontSize(uint32_t size);
     void SetText(std::wstring text);
+    void SetText(std::string text);
 
     void Draw(bool isDrc) override;
 

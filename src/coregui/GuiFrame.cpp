@@ -7,6 +7,10 @@ GuiFrame::GuiFrame() : GuiElement(){
     m_Parent = nullptr;
 }
 
+GuiFrame::~GuiFrame(){
+    ClearElements();
+}
+
 void GuiFrame::AddElement(GuiElement* element){
     element->m_Parent = this;
     m_Elements.push_back(element);
@@ -27,8 +31,19 @@ void GuiFrame::ClearElements(){
     m_Elements.clear();
 }
 
+void GuiFrame::Update(){
+    for(GuiElement* element : m_Elements){
+        if(element->IsActive()){
+            element->Update();
+        }
+    }
+}
+
+
 void GuiFrame::Draw(bool isDrc){
     for(GuiElement* element : m_Elements){
-        element->Draw(isDrc);
+        if(element->IsActive()){
+            element->Draw(isDrc);
+        }
     }
 }

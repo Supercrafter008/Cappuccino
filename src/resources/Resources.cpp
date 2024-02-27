@@ -8,16 +8,16 @@
 
 
 
-const uint8_t* Resources::GetFile(const char *path) {
+const uint8_t* Resources::GetFile(std::string path) {
     for (int32_t i = 0; ResourceList[i].filename != nullptr; ++i) {
-        if (strcasecmp(path, ResourceList[i].filename) == 0) {
+        if (path.compare(ResourceList[i].filename) == 0) {
             uint8_t* memory = (uint8_t*)malloc(ResourceList[i].FileSize);
             memcpy(memory, ResourceList[i].File, ResourceList[i].FileSize);
             return memory;
         }
     }
     
-    FILE* file = fopen(path, "r");
+    FILE* file = fopen(path.c_str(), "r");
     if(file != nullptr){
         fseek(file, 0, SEEK_END);
         uint32_t fileSize = ftell(file);
@@ -31,14 +31,14 @@ const uint8_t* Resources::GetFile(const char *path) {
     return nullptr;
 }
 
-uint32_t Resources::GetFileSize(const char *path) {
+uint32_t Resources::GetFileSize(std::string path) {
     for (int32_t i = 0; ResourceList[i].filename != nullptr; ++i) {
-        if (strcasecmp(path, ResourceList[i].filename) == 0) {
+        if (path.compare(ResourceList[i].filename) == 0) {
             return ResourceList[i].FileSize;
         }
     }
 
-    FILE* file = fopen(path, "r");
+    FILE* file = fopen(path.c_str(), "r");
     if(file != NULL){
         fseek(file, 0, SEEK_END);
         uint32_t fileSize = ftell(file);
